@@ -1,1 +1,1 @@
-for /r %%g in (*.hdr) do gdal_translate -ot Float32 -of PCRaster -mo PCRASTER_VALUESCALE=VS_SCALAR "%%g" "%%~dpng.map" 
+for /r %%g in (*.hdr) do gdal_translate -ot Float32 -of PCRaster -mo PCRASTER_VALUESCALE=VS_SCALAR "%%g" "%%~dpng.map"
