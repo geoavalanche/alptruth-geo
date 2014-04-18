@@ -6,8 +6,10 @@ Look for the upcoming Geospatial / GIS scientific journal manuscript on the use 
 Developed entirely with FOSS4G.  Load SEXTANTE models into QGIS Processing plugin to use.
 
 Developed for/using the following data sources:
-----
-DEM - NAIP 10m
-Biomass - USDA Biomass
-Snowdata - NSIDC SNODAS
-Bulletin/Observations - Scraping of CAIC website (avalanche.state.co.us)
+
+| Data Requirement | Data Source for Colorado, USA |
+-------------------|-------------------------------|
+| DEM |  NAIP 10m
+Biomass | USDA Biomass
+Snowdata | NSIDC SNODAS
+Bulletin/Observations | Scraping of CAIC website (avalanche.state.co.us)
