@@ -1,0 +1,14 @@
+NAME:Catchement Slope Calculator
+GROUP:Thesis - Avalanche
+PARAMETER:ParameterRaster|RASTERLAYER_DEM|dem|False
+120.0,60.0
+VALUE:HARDCODEDPARAMVALUE_T_0===10
+ALGORITHM:saga:sagawetnessindex
+120.0,160.0
+None
+-1|RASTERLAYER_DEM
+-1|HARDCODEDPARAMVALUE_T_0
+None
+c_slope|190.0,296.5
+None
+None

@@ -1,0 +1,24 @@
+(dp0
+S'ALG_DESC'
+p1
+V
+p2
+sVRASTERLAYER_TOPOLOGICALAVALANCHEHAZARD
+p3
+g2
+sVRASTERLAYER_RECENTSNOWPRECIPITATION24HOURS
+p4
+g2
+sVVECTORLAYER_CAICZONES
+p5
+VA vector polygon of forecast zones and their forecast ids.
+p6
+sVRASTERLAYER_BIOMASS
+p7
+VA raster of biomass for vegetation.
+p8
+sVRASTERLAYER_DEMDIGITALELEVATIONMODEL
+p9
+VDigital elevation model.
+p10
+s.
