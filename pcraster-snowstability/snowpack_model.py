@@ -29,7 +29,9 @@ class SnowStabilityModel(DynamicModel):
 		self.snow_mm = list()
 		self.snow_layers = list()
 		self.blank_layers_map = scalar (0)
-		self.dhp = scalar (0) # Depth hoar problem indicator
+		self.dhp = scalar (-1) # Depth hoar problem indicator
+		self.rrfp = scalar (0) # Radiation recrystallization facet problem
+		self.rrfp_depth = scalar (0) # Radiation recrystallization facet problem depth check
 		
 		self.load_status = 0;
 		self.STARTING_DATE = time.strptime ('20131101' , '%Y%m%d')
@@ -155,22 +157,35 @@ class SnowStabilityModel(DynamicModel):
 	def dynamic (self):
 		#adds a layer if a snow event exceeds 10mm
 		#self.blank_layers_map = ifthenelse (self.readmap ("output/snowmm") > scalar (10), self.blank_layers_map + scalar(1), self.blank_layers_map)
-		report (self.readmap ("output/melt") > self.readmap("output/subl"), "output/" + generateNameT("loss", self.currentTimeStep()))
+		#report (self.readmap ("output/melt") > self.readmap("output/subl"), "output/" + generateNameT("loss", self.currentTimeStep()))
 		#removes layer if no snow
 		#self.blank_layers_map = ifthenelse (self.readmap ("output/depth") < scalar (5), max(self.blank_layers_map - scalar(1),0), self.blank_layers_map)
 		#report (self.blank_layers_map, "output/" + generateNameT("res", self.currentTimeStep()))
-
-		self.tempness = (scalar (0) - self.readmap ("output/temp")) * scalar(2)
-		self.tempdepth = self.readmap ("output/depth")
-		self.temperature_gradient = scalar(self.tempness / self.tempdepth);
-		report ( scalar(self.temperature_gradient) , "output/" + generateNameT("tempgrad", self.currentTimeStep()))
-		self.temperature_gradient_exceeded = scalar(ifthenelse(self.temperature_gradient > scalar(10), scalar (1), scalar (-1))) #Temperature gradient is > 1C / cm
-		self.dhp = scalar (scalar(self.dhp) + scalar(self.temperature_gradient_exceeded))
-		report (scalar(self.temperature_gradient_exceeded), "output/" + generateNameT("test", self.currentTimeStep()))
-		self.dhp = scalar(ifthenelse (scalar(self.dhp) < scalar(-10), scalar(10), scalar(self.dhp)))
-		self.dhp = cover(scalar(ifthenelse (self.dhp > scalar(14), scalar(14), scalar(self.dhp))),scalar(0))
+		
+		# Calculates formation of facets by radiation recrystallization
+		self.rrfp = cover(max(self.rrfp,ifthenelse ( pcrand (self.readmap("output/subl") < scalar(-500), self.readmap ("output/melt") < scalar(0)), scalar (1), scalar (0))),scalar(0))
+		self.rrfp_depth = cover(self.rrfp * (self.rrfp_depth + self.readmap ("output/snowmm")), scalar(0))
+		self.rrfp = cover(ifthenelse (self.rrfp_depth > scalar(1), scalar(0), self.rrfp),scalar(0))
+		self.rrfp_depth = cover(self.rrfp_depth * self.rrfp, scalar(0))
+		
+		#report (self.rrfp, "output/" + generateNameT("rrfp", self.currentTimeStep()))
+		#report (self.rrfp_depth, "output/" + generateNameT("rrfpdpth", self.currentTimeStep()))
+		
+		self.temp_min = (scalar (0) - self.readmap ("output/temp")) * scalar(2) #assumes average snowpack temperature is the median and constructs a low temperature value
+		self.snow_depth = self.readmap ("output/depth")
+		self.temperature_gradient = scalar(self.temp_min / self.snow_depth);
+		#report ( self.temperature_gradient , "output/" + generateNameT("tempgrad", self.currentTimeStep()))
+		self.temperature_gradient_exceeded = ifthenelse(self.temperature_gradient > scalar(10), scalar (1), scalar (-1)) #Temperature gradient is > 1C / cm
+		self.dhp = scalar(self.dhp) + scalar(self.temperature_gradient_exceeded)
+		self.dhp = ifthenelse (scalar(self.dhp) < scalar(-5), scalar(5), scalar(self.dhp))
+		self.dhp = cover(ifthenelse (self.dhp > scalar(30), scalar(30), scalar(self.dhp)),scalar(-1))
 		#ifthenelse (self.temperature_gradient_exceeded, self.dhp = self.dhp + scalar (1), self.dhp = self.dhp - scalar (1))
-		report (scalar(self.dhp), "output/" + generateNameT("dpthhoar", self.currentTimeStep()))
+		#report (self.dhp, "output/" + generateNameT("dpthhoar", self.currentTimeStep()))
+		
+		#self.unstable_snow = max(ifthenelse (pcrand(self.dhp > scalar (0), self.snow_depth < scalar (1)), scalar(1), scalar (0)), self.rrfp)
+		self.unstable_snow = ifthenelse (pcrand(self.dhp > scalar (0), self.snow_depth < scalar (1)), scalar(1), scalar (0)) + self.rrfp
+		report (self.unstable_snow, "output/" + generateNameT("unstable", self.currentTimeStep()))
+		
 		
 		#use depth and temp to determine rudimentary temperature gradients
 		#iterate through the whole time period
