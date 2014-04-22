@@ -22,6 +22,7 @@ class SnowStabilityModel(DynamicModel):
 		# rr_mmmffppppSvvvvTttttooooTSyyyymmddhhIPOOO.xxx.gz
 		self.iter = 0;
 		self.snowfall_layers = list()
+		self.rainfall_layers = list()
 		self.snow_depths = list()
 		self.snow_temps = list()
 		self.snow_sublimations = list()
@@ -45,9 +46,6 @@ class SnowStabilityModel(DynamicModel):
 		self.dtf_rrmmm = "us_ssm"
 		self.dtf_oooo = "TTNA"
 
-		# Establish date and year
-		self.dtf_tstamp = "20131122" + "05"
-
 		# Precipitation (snow)
 		self.dtf_ff = "v0"
 		self.dtf_ppppS = "1025S"
@@ -67,6 +65,27 @@ class SnowStabilityModel(DynamicModel):
 			self.load_status += 1
 			report (self.snowfall_layers [self.x] , "output/" + generateNameT("snowfall", self.x))
 		print "Complete."	
+		
+		# Precipitation (non-snow)
+		self.dtf_ff = "v0"
+		self.dtf_ppppS = "1025S"
+		self.dtf_vvvv = "lL00"
+		self.dtf_Ttttt = "T0024"
+		self.dtf_TS = "TS" #yyyymmdd "05"
+		self.dtf_I = "D"
+		self.dtf_POOO = "P001"
+
+		print "Loading all non-snow precipitation event rasters..."
+		#load all non-snow fall
+		for self.x in range (0, timesteps):
+			self.current_date = date (self.STARTING_DATE.tm_year, self.STARTING_DATE.tm_mon, self.STARTING_DATE.tm_mday) + timedelta(self.x)
+			self.file_name = self.dtf_rrmmm + self.dtf_ff + self.dtf_ppppS + self.dtf_vvvv + self.dtf_Ttttt + self.dtf_oooo + self.dtf_TS + self.current_date.strftime ('%Y%m%d') + "05" + self.dtf_I + self.dtf_POOO
+			self.rainfall_layers.append(self.readmap ("snowdata/" + self.file_name))
+			print ".",
+			self.load_status += 1
+			report (self.rainfall_layers [self.x] , "output/" + generateNameT("rainfall", self.x))
+		print "Complete."	
+		
 		
 		# Snow depth -- correlate this with the mass of falling snow to determine density and depth
 		self.dtf_ff = "v1"
@@ -166,7 +185,7 @@ class SnowStabilityModel(DynamicModel):
 		self.dtf_I = "D"
 		self.dtf_POOO = "P000"
 		
-		print "Loading all blowing snow sublimation..."
+		print "Loading all blowing snow sublimation rasters..."
 		for self.x in range (0, timesteps):
 			self.current_date = date (self.STARTING_DATE.tm_year, self.STARTING_DATE.tm_mon, self.STARTING_DATE.tm_mday) + timedelta(self.x)
 			self.file_name = self.dtf_rrmmm + self.dtf_ff + self.dtf_ppppS + self.dtf_vvvv + self.dtf_Ttttt + self.dtf_oooo + self.dtf_TS + self.current_date.strftime ('%Y%m%d') + "05" + self.dtf_I + self.dtf_POOO
@@ -186,21 +205,26 @@ class SnowStabilityModel(DynamicModel):
 		#report (self.blank_layers_map, "output/" + generateNameT("res", self.currentTimeStep()))
 		self.temperature = self.readmap ("output/temp")
 		self.snowmm = self.readmap ("output/snowmm")
+		self.rainfall = self.readmap ("output/rainfall")
 		self.melt = self.readmap ("output/melt")
 		self.subl = self.readmap("output/subl")
 		self.blowingsnow = self.readmap ("output/blowsnow")
+		self.snow_depth = self.readmap ("output/depth")
 		
 		self.non_precip_days = ifthenelse (self.snowmm == scalar(0), self.non_precip_days + scalar(1), scalar(0))
 		
 		
 		self.stable_factor = cover(ifthenelse ( pcrand(pcrand (self.non_precip_days > scalar(5), self.subl > scalar(-500)), self.blowingsnow > scalar(-300)), self.stable_factor + scalar(1), scalar(0)) , scalar (0))
+		self.mlrfp = ifthenelse ( self.stable_factor > scalar(0), scalar (1), self.mlrfp)
+		self.rrfp = ifthenelse ( self.stable_factor > scalar (2), scalar (1), self.rrfp)
+			
 		# Calculates formation of facets by radiation recrystallization
 		self.rrfp = cover(max(self.rrfp,ifthenelse ( pcrand (self.subl < scalar(-500), self.melt < scalar(0)), scalar (1), scalar (0))),scalar(0))
 		self.rrfp_depth = cover(self.rrfp * (self.rrfp_depth + self.snowmm), scalar(0))
 		self.rrfp = cover(ifthenelse (self.rrfp_depth > scalar(1), scalar(0), self.rrfp),scalar(0))
 		self.rrfp_depth = cover(self.rrfp_depth * self.rrfp, scalar(0))
 		
-		self.mlrfp = cover(max(self.mlrfp,ifthenelse ( pcrand ( pcror (self.subl < scalar(-500), self.melt > scalar(0)), (self.snowmm > scalar(0))), scalar (1), scalar (0))),scalar(0))
+		self.mlrfp = cover(max(self.mlrfp,ifthenelse ( pcrand  (pcror( pcror (self.subl < scalar(-500), self.melt > scalar(0)), self.rainfall > scalar(0)), (self.snowmm > scalar(0))), scalar (1), scalar (0))),scalar(0))
 		self.mlrfp_depth = cover(self.mlrfp * (self.mlrfp_depth + self.snowmm), scalar(0))
 		self.mlrfp = cover(ifthenelse (self.mlrfp_depth > scalar(1), scalar(0), self.mlrfp),scalar(0))
 		self.mlrfp_depth = cover(self.mlrfp_depth * self.mlrfp, scalar(0))
@@ -208,7 +232,6 @@ class SnowStabilityModel(DynamicModel):
 		#report (self.rrfp_depth, "output/" + generateNameT("rrfpdpth", self.currentTimeStep()))
 		
 		self.temp_min = (scalar (0) - self.temperature) * scalar(2) #assumes average snowpack temperature is the median and constructs a low temperature value
-		self.snow_depth = self.readmap ("output/depth")
 		self.temperature_gradient = scalar(self.temp_min / self.snow_depth);
 		#report ( self.temperature_gradient , "output/" + generateNameT("tempgrad", self.currentTimeStep()))
 		self.temperature_gradient_exceeded = ifthenelse(self.temperature_gradient > scalar(10), scalar (1), scalar (-1)) #Temperature gradient is > 1C / cm
@@ -216,10 +239,17 @@ class SnowStabilityModel(DynamicModel):
 		self.dhp = ifthenelse (scalar(self.dhp) < scalar(-5), scalar(5), scalar(self.dhp))
 		self.dhp = cover(ifthenelse (self.dhp > scalar(30), scalar(30), scalar(self.dhp)),scalar(-1))
 		#ifthenelse (self.temperature_gradient_exceeded, self.dhp = self.dhp + scalar (1), self.dhp = self.dhp - scalar (1))
+		
+		# Reset all stability indicators to 0 if no snow cover
+		self.mlrfp = ifthenelse (self.snow_depth > scalar(0), self.mlrfp, scalar(0))
+		self.rrfp = ifthenelse (self.snow_depth > scalar(0), self.rrfp, scalar(0))
+		self.dhp = ifthenelse (self.snow_depth > scalar(0), self.dhp, scalar(0))
+		self.stable_factor = ifthenelse (self.snow_depth > scalar(0), self.stable_factor, scalar(0))	
+		
 		report (self.dhp, "output/" + generateNameT("dpthhoar", self.currentTimeStep()))
 		
 		#self.unstable_snow = max(ifthenelse (pcrand(self.dhp > scalar (0), self.snow_depth < scalar (1)), scalar(1), scalar (0)), self.rrfp)
-		self.unstable_snow = max(ifthenelse (pcrand(self.dhp > scalar (0), self.snow_depth < scalar (1)), scalar(1), scalar (0)) + scalar(self.rrfp_depth > 0.01) + scalar(self.mlrfp) - scalar (self.stable_factor), scalar(0))
+		self.unstable_snow = max(ifthenelse (pcrand(self.dhp > scalar (0), self.snow_depth < scalar (1)), scalar(1), scalar (0)) + scalar(self.rrfp_depth > 0.01) + scalar(self.mlrfp) - scalar (self.stable_factor > scalar(0)), scalar(0))
 		report (self.unstable_snow, "output/" + generateNameT("unstable", self.currentTimeStep()))
 		report (self.stable_factor, "output/" + generateNameT ("stablef", self.currentTimeStep()))
 		report (self.non_precip_days, "output/" + generateNameT ("nonpp", self.currentTimeStep()))
