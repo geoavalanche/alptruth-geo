@@ -5,11 +5,11 @@
 #  This script should be obtained from
 #  http://github.com/thurs/alptruth-geo/
 #
-#  @version v1-beta1 
+#  @version v1-beta2 
 #  @author Thomas Horner
 #  @contact thomas.horner@ucdenver.edu
 #  @website thurs.github.io
-#  @date 4/21/2014
+#  @date 4/23/2014
 #  @license MIT
 #
 from pcraster import *
@@ -247,7 +247,7 @@ class SnowStabilityModel(DynamicModel):
 		# Reset all stability indicators to 0 if no snow cover
 		self.mlrfp = ifthenelse (self.snow_depth > scalar(0), self.mlrfp, scalar(0))
 		self.rrfp = ifthenelse (self.snow_depth > scalar(0), self.rrfp, scalar(0))
-		self.wspp = ifthenelse (self.snow_depth > scalar(0), self.rrfp, scalar(0))
+		self.wsp = ifthenelse (self.snow_depth > scalar(0), self.wsp, scalar(0))
 		self.dhp = ifthenelse (self.snow_depth > scalar(0), self.dhp, scalar(0))
 		self.stable_factor = ifthenelse (self.snow_depth > scalar(0), self.stable_factor, scalar(0))	
 		
@@ -256,7 +256,7 @@ class SnowStabilityModel(DynamicModel):
 		report (self.mlrfp, "output/" + generateNameT("mlrfprob", self.currentTimeStep()))
 		report (self.rrfp, "output/" + generateNameT("rrfprob", self.currentTimeStep()))
 		
-		self.unstable_snow = max(ifthenelse (pcrand(self.dhp > scalar (0), self.snow_depth < scalar (1)), scalar(1), scalar (0)) + scalar(self.rrfp_depth > 0.01) + scalar(self.mlrfp) - scalar (self.stable_factor > scalar(0)) + scalar(self.wsp), scalar(0))
+		self.unstable_snow = max(ifthenelse (pcrand(self.dhp > scalar (0), self.snow_depth < scalar (1)), scalar(1), scalar (0)) + scalar(self.rrfp_depth > scalar(0.01)) + scalar(self.mlrfp) - scalar (self.stable_factor > scalar(0)) + scalar(self.wsp), scalar(0))
 		report (self.unstable_snow, "output/" + generateNameT("unstable", self.currentTimeStep()))
 	
 
