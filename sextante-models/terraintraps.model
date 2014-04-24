@@ -1,4 +1,4 @@
-NAME:TerrainTraps
+NAME:ALPTRUTh T - Terrain Traps
 GROUP:Thesis - Avalanche
 PARAMETER:ParameterRaster|RASTERLAYER_BIOMASS|Biomass|False
 120.0,60.0
@@ -32,4 +32,4 @@ None
 -1|HARDCODEDPARAMVALUE_formula_2
 None
 -1|HARDCODEDPARAMVALUE_GRASS_REGION_CELLSIZE_PARAMETER_2
-final|760.0,360.0
+ALPTRUTh T - Terrain Traps|760.0,360.0

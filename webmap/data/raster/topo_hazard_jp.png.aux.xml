@@ -1,0 +1,27 @@
+<PAMDataset>
+  <SRS>PROJCS["WGS 84 / Pseudo-Mercator",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]],PROJECTION["Mercator_1SP"],PARAMETER["central_meridian",0],PARAMETER["scale_factor",1],PARAMETER["false_easting",0],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["X",EAST],AXIS["Y",NORTH],EXTENSION["PROJ4","+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs"],AUTHORITY["EPSG","3857"]]</SRS>
+  <GeoTransform> 4.2104675463899999e+005, 9.2138317073954887e+000, 0.0000000000000000e+000, 4.4060040632900000e+006, 0.0000000000000000e+000,-9.2155078068732266e+000</GeoTransform>
+  <Metadata>
+    <MDI key="AREA_OR_POINT">Area</MDI>
+  </Metadata>
+  <PAMRasterBand band="1">
+    <Histograms>
+      <HistItem>
+        <HistMin>-0.498046875</HistMin>
+        <HistMax>255.498046875</HistMax>
+        <BucketCount>256</BucketCount>
+        <IncludeOutOfRange>0</IncludeOutOfRange>
+        <Approximate>1</Approximate>
+        <HistCounts>680|6723|6144|3361|1753|1382|874|983|685|271|230|228|208|252|186|135|62|12|18|21|24|18|8|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0</HistCounts>
+      </HistItem>
+    </Histograms>
+    <Metadata>
+      <MDI key="COLOR_TABLE_RULE_RGB_0">0.000000e+000 4.970256e+000 255 255 0 0 255 0</MDI>
+      <MDI key="COLOR_TABLE_RULE_RGB_1">4.970256e+000 9.940513e+000 0 255 0 0 255 255</MDI>
+      <MDI key="COLOR_TABLE_RULE_RGB_2">9.940513e+000 1.491077e+001 0 255 255 0 0 255</MDI>
+      <MDI key="COLOR_TABLE_RULE_RGB_3">1.491077e+001 1.988103e+001 0 0 255 255 0 255</MDI>
+      <MDI key="COLOR_TABLE_RULE_RGB_4">1.988103e+001 2.485128e+001 255 0 255 255 0 0</MDI>
+      <MDI key="COLOR_TABLE_RULES_COUNT">5</MDI>
+    </Metadata>
+  </PAMRasterBand>
+</PAMDataset>
