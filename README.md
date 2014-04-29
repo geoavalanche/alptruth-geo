@@ -12,7 +12,7 @@ Developed for/using the following data sources:
 | DEM |  NAIP 10m | (Optional) Tile to manageable sizes for analysis.
 Biomass | USDA Biomass | (Optional) Resample to DEM resolution, (Optional) Clip to DEM analysis regions
 Snowdata | NSIDC SNODAS | (Required) Remove all "Created by: " information from .hdr files
-Bulletin/Observations | Scraping of CAIC website (avalanche.state.co.us)
+Bulletin/Observations | Scraping of CAIC website (avalanche.state.co.us) | (Required) Working internet connection, (Required) PHP and server application running
 
 
 ##Requirements
