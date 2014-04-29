@@ -1,5 +1,5 @@
 NAME:ALPTRUTh L - Loading
-GROUP:Thesis - Avalanche
+GROUP:ALPTRUTh-geo
 PARAMETER:ParameterRaster|RASTERLAYER_SNOWBLOWING|Recent Blowing Snow - 24 Hours|False
 363.0,123.0
 PARAMETER:ParameterRaster|RASTERLAYER_RECENTBLOWINGSNOW48HOURS|Recent Blowing Snow - 48 Hours|False

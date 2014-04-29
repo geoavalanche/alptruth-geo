@@ -1,5 +1,5 @@
 NAME:ALPTRUTh U - Unstable Snow
-GROUP:Thesis - Avalanche
+GROUP:ALPTRUTh-geo
 PARAMETER:ParameterVector|VECTORLAYER_CAICZONES|caic_zones|-1|False
 146.0,67.0
 PARAMETER:ParameterString|STRING_SNOWSTABILITYSCRIPTLOCATION|snow_stability_script_location|"C:\alptruth-geo\pcraster-snowstability\snowpack_model.bat"

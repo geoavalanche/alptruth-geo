@@ -1,16 +1,16 @@
 NAME:ALPTRUTh A - Avalanches
-GROUP:Thesis - Avalanche
+GROUP:ALPTRUTh-geo
 PARAMETER:ParameterVector|VECTORLAYER_CAICZONES|CAIC Zones|-1|False
 120.0,60.0
 VALUE:HARDCODEDPARAMVALUE_GLOBAL_0===import urllib%%%import urllib2%%%import csv%%%import StringIO%%%opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())%%%urllib2.install_opener (opener)%%%req = opener.open('http://avalanche.state.co.us/caic/obs/avi_report.php?next=1')%%%data = req.read()%%%req.close()%%%req = opener.open('http://avalanche.state.co.us/caic/obs/avi_csv_dump.php')%%%caic_data = req.read()%%%req.close()%%%obs_values = []%%%caic_obs = csv.reader(StringIO.StringIO(caic_data))%%%for row in caic_obs:%%%	obs_values.append (row[5] if len(row)>5 else None)%%%%%%forecast_flags = [0,0,0,0,0,0,0,0,0,0]%%%for row in obs_values:%%%	if row == "Vail & Summit County":%%%		forecast_flags [2] = 1%%%	elif row == "Aspen":%%%		forecast_flags [4] = 1%%%	elif row == "Sawatch Range":%%%		forecast_flags [3] = 1%%%	elif row == "Front Range":%%%		forecast_flags [1] = 1%%%	elif row == "Steamboat & Flat Tops":%%%		forecast_flags [0] = 1%%%	elif row == "Southern San Juan":%%%		forecast_flags [8] = 1%%%	elif row == "Northern San Juan":%%%		forecast_flags [7] = 1%%%	elif row == "Sangre de Cristo":%%%		forecast_flags [9] = 1%%%	elif row == "Gunnison":%%%		forecast_flags [5] = 1%%%	elif row == "Grand Mesa":%%%		forecast_flags [6] = 1%%%%%%
-VALUE:HARDCODEDPARAMVALUE_WIDTH_1===1000
+VALUE:HARDCODEDPARAMVALUE_HEIGHT_1===1000
 VALUE:HARDCODEDPARAMVALUE_DIMENSIONS_1===1
 VALUE:HARDCODEDPARAMVALUE_FORMULA_0===value = forecast_flags[<caic_id>]
 VALUE:HARDCODEDPARAMVALUE_FIELD_PRECISION_0===0
 VALUE:HARDCODEDPARAMVALUE_FIELD_TYPE_0===0
 VALUE:HARDCODEDPARAMVALUE_FIELD_1===avy_obs
 VALUE:HARDCODEDPARAMVALUE_FIELD_NAME_0===avy_obs
-VALUE:HARDCODEDPARAMVALUE_HEIGHT_1===1000
+VALUE:HARDCODEDPARAMVALUE_WIDTH_1===1000
 VALUE:HARDCODEDPARAMVALUE_FIELD_LENGTH_0===100
 ALGORITHM:qgis:advancedpythonfieldcalculator
 132.0,190.0

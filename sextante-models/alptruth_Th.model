@@ -1,5 +1,5 @@
 NAME:ALPTRUTh Th - Thaw Instability
-GROUP:Thesis - Avalanche
+GROUP:ALPTRUTh-geo
 PARAMETER:ParameterRaster|RASTERLAYER_SNOWMELT|Snow Melt|False
 120.0,60.0
 PARAMETER:ParameterRaster|RASTERLAYER_RAINFALL|Rainfall|False

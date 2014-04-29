@@ -1,0 +1,17 @@
+NAME:Output - Run Once / Initialization
+GROUP:ALPTRUTh-geo
+PARAMETER:ParameterRaster|RASTERLAYER_DEM|DEM|False
+120.0,60.0
+PARAMETER:ParameterRaster|RASTERLAYER_BIOMASS|Biomass|False
+340.0,60.0
+ALGORITHM:modeler:topomodel
+120.0,160.0
+None
+-1|RASTERLAYER_DEM
+Topological Avalanche Hazard|134.0,307.0
+ALGORITHM:modeler:terraintraps
+412.0,164.0
+None
+-1|RASTERLAYER_BIOMASS
+-1|RASTERLAYER_DEM
+ALPTRUTh T - Terrain Traps|357.0,307.0
