@@ -9,10 +9,10 @@ Developed for/using the following data sources:
 
 | Data Requirement | Data Source for Colorado, USA | Data Preparation |
 -------------------|-------------------------------|-------------------------|
-| DEM |  NAIP 10m | (Optional) Tile to manageable sizes for analysis.
-Biomass | USDA Biomass | (Optional) Resample to DEM resolution, (Optional) Clip to DEM analysis regions
+| DEM |  NAIP 10m | (Optional) Tile to manageable sizes for analysis, (Required) Reproject to a projected coordinate system
+Biomass | USDA Biomass | (Optional) Resample to DEM resolution, (Optional) Clip to DEM analysis regions, (Required) Reproject to a projected coordinate system
 Snowdata | NSIDC SNODAS | (Required) Remove all "Created by: " information from .hdr files
-Bulletin/Observations | Scraping of CAIC website (avalanche.state.co.us) | (Required) Working internet connection, (Required) PHP and server application running
+Bulletin/Observations | Scraping of CAIC website (avalanche.state.co.us) | (Required) Working internet connection, (Required) PHP and server application running, (Required) Vector of forecast regions with matching IDs
 
 
 ##Requirements
