@@ -1,0 +1,126 @@
+MAP
+	CONFIG "MS_ERRORFILE" "C:/ms4w/tmp/ms_error.txt"
+	CONFIG "MS_NONSQUARE" NO
+	DEBUG 3
+	NAME "alptruth-geo"
+	IMAGETYPE PNG
+  
+	PROJECTION
+		'init=epsg:900913'
+	END  
+  
+	EXTENT -180 -90 180 90  
+
+OUTPUTFORMAT
+  NAME "png8"
+  DRIVER AGG/PNG8
+  MIMETYPE "image/png; mode=8bit"
+  IMAGEMODE RGBA
+  EXTENSION "png"
+  FORMATOPTION "QUANTIZE_FORCE=on"
+  FORMATOPTION "QUANTIZE_COLORS=256"
+  FORMATOPTION "GAMMA=0.75"
+END
+ 
+	WEB
+		IMAGEPATH "/ms4w/tmp/ms_tmp/"
+		IMAGEURL  "/ms_tmp/"
+		METADATA
+		  'ows_title'           'WMS-Mapserver'
+		  'ows_onlineresource'  'http://localhost/cgi-bin/mapserv.exe?map=../htdocs/alptruth-geo/mapfiles/alptruth-geo.map&'
+		  'ows_srs'             'EPSG:3857 EPSG:4326'
+		  'wms_enable_request'  '*'
+		END
+	END
+  
+	LAYER
+		NAME 	'topo-hazard'
+		TYPE    RASTER
+		DATA    "PG:host=localhost port=5432 dbname='alptruth-geo' user='postgres' password='XXXXXXX' schema='public' table='topohazard' mode='2'"
+		PROCESSING "OVERSAMPLE_RATIO=1.0"
+		
+		PROJECTION
+			"init=epsg:3857"
+		END
+		
+		CLASS
+			NAME "Low Risk"
+			EXPRESSION ([pixel] < 1.5)
+			STYLE
+				COLOR 0 0 0
+				OPACITY 0
+			END
+		END
+		
+		CLASS
+			NAME "Extreme Risk"
+			EXPRESSION ([pixel] >= 4) 
+			STYLE
+				COLOR 255 0 0
+				OPACITY 50
+			END
+		END
+		
+		CLASS
+			NAME "High Risk"
+			EXPRESSION ([pixel] >= 2) 
+			STYLE			
+				COLOR 255 122 0
+				OPACITY 50
+			END
+		END
+		
+		CLASS
+			NAME "Some Risk"
+			EXPRESSION ([pixel] >= 1.5) 
+			STYLE
+				COLOR 255 255 0
+				OPACITY 30
+			END
+		END
+
+	END
+	
+	LAYER
+		NAME 	'alptruth'
+		STATUS OFF
+		TYPE    RASTER
+		DATA    "PG:host=localhost port=5432 dbname='alptruth-geo' user='postgres' password='Canadian_s@lsa1' schema='public' table='alptruth' mode='2'"
+		PROCESSING "NODATA=0"
+		PROCESSING "SCALE=AUTO"
+		
+		PROJECTION
+			"init=epsg:4326"
+		END
+		
+		CLASS
+			NAME "Some Risk"
+			EXPRESSION ([pixel] < 3)
+			STYLE
+				COLOR 0 0 0
+				OPACITY 0
+			END
+		END
+		
+		CLASS
+			NAME "Moderate Risk"
+			EXPRESSION ([pixel] >= 3 AND [pixel] < 5) 
+			STYLE
+				COLOR 255 255 0
+				OPACITY 30
+			END
+		END
+
+		CLASS
+			NAME "Extreme Risk"
+			EXPRESSION ([pixel] >= 5) 
+			STYLE
+				COLOR 255 0 0
+				OPACITY 50
+			END
+		END
+
+	END
+END
+
+
