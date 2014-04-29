@@ -1,0 +1,62 @@
+#
+# Mapfile to set up a MapServer WMS server providing rasters from the PostGIS database
+#
+MAP
+  NAME "ALPTRUTh-Geo MapServer"
+  EXTENT -110 41 -102 37
+  UNITS DD
+
+  IMAGETYPE PNG24
+
+  PROJECTION
+    "init=epsg:4326"
+  END
+
+  WEB
+    METADATA
+      ows_enable_request "*"
+    END
+  END
+
+  LAYER
+    NAME "ALPTRUTh Final"
+    STATUS ON
+    TYPE RASTER
+    DATA "PG:host=localhost port=5432 dbname='alptruth-geo' user='postgres' password='XXX' 
+		schema='someschema' table='alptruth-final' mode='2'"	
+	  PROCESSING "NODATA=0"
+  	PROCESSING "SCALE=AUTO"
+    CLASS
+      STYLE
+        COLOR 246 241 223
+      END
+    END
+  END
+  
+  LAYER
+    NAME "Topological Hazard"
+    STATUS ON
+    TYPE RASTER
+    DATA "PG:host=localhost port=5432 dbname='alptruth-geo' user='postgres' password='XXX' 
+		schema='someschema' table='topo-hazard' mode='2'"	
+    CLASS
+      STYLE
+        COLOR 246 241 223
+      END
+    END
+  END
+  
+  LAYER
+    NAME "Snow Stability"
+    STATUS ON
+    TYPE RASTER
+    DATA "PG:host=localhost port=5432 dbname='alptruth-geo' user='postgres' password='XXX' 
+		schema='someschema' table='snow-stability' mode='2'"	
+    CLASS
+      STYLE
+        COLOR 246 241 223
+      END
+    END
+  END
+
+END
