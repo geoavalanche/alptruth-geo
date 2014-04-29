@@ -9,25 +9,26 @@ Developed for/using the following data sources:
 
 | Data Requirement | Data Source for Colorado, USA | Data Preparation |
 -------------------|-------------------------------|-------------------------|
-| DEM |  NAIP 10m | Tile to manageable sizes for analysis.
+| DEM |  NAIP 10m | (Optional) Tile to manageable sizes for analysis.
 Biomass | USDA Biomass | (Optional) Resample to DEM resolution, (Optional) Clip to DEM analysis regions
 Snowdata | NSIDC SNODAS | (Required) Remove all "Created by: " information from .hdr files
 Bulletin/Observations | Scraping of CAIC website (avalanche.state.co.us)
 
 
-Requirements
-==
+##Requirements
+
 
 | Software | Plug-Ins / Addons |
 |----------|---------|
 | QGIS 2.2 | Processing (SEXTANTE) |
 | PCRaster 4.0.1 | Python 2.7 & NumPy 1.8 |
 | PHP 5 | simple_dom_scraper.php |
-| Web Server (Apache) | PHP |
+| Web Server (Apache) | PHP, MapServer CGI |
 | PostgreSQL | PostGIS |
+| MapServer | WMS |
 
-Running the Model
-==
+##Running the Model
+
 
 1) Configure the webserver and PostGIS database and ensure the scraping scripts work and the database is accessible.
 
