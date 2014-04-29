@@ -7,11 +7,11 @@ Developed entirely with FOSS4G.  Load SEXTANTE models into QGIS Processing plugi
 
 Developed for/using the following data sources:
 
-| Data Requirement | Data Source for Colorado, USA |
--------------------|-------------------------------|
-| DEM |  NAIP 10m
-Biomass | USDA Biomass
-Snowdata | NSIDC SNODAS
+| Data Requirement | Data Source for Colorado, USA | Data Preparation |
+-------------------|-------------------------------|-------------------------|
+| DEM |  NAIP 10m | Tile to manageable sizes for analysis.
+Biomass | USDA Biomass | (Optional) Resample to DEM resolution, (Optional) Clip to DEM analysis regions
+Snowdata | NSIDC SNODAS | (Required) Remove all "Created by: " information from .hdr files
 Bulletin/Observations | Scraping of CAIC website (avalanche.state.co.us)
 
 
