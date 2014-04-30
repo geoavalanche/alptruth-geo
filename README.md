@@ -27,6 +27,10 @@ Bulletin/Observations | Scraping of CAIC website (avalanche.state.co.us) | (Requ
 | PostgreSQL | PostGIS |
 | MapServer | WMS |
 
+##Setting Up the Model
+
+If you are using NSIDC SNODAS data, GDAL/OGR cannot handle the large strings in the .hdr files.  This is due to the information in the "Created XXXXX" descriptors which are unnecessary for proper use of the data.  If you need to remove this information from a large number of .hdr files, you can use a batch grep utility like TextCrawler (Windows) to replace 'Created.*' with '' (nothing).  Then you can run the included batch script (convert\_snodas\_data) without issue.
+
 ##Running the Model
 
 
