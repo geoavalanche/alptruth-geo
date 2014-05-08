@@ -5,7 +5,7 @@ MAP
 	IMAGETYPE PNG
   
 	PROJECTION
-		'init=epsg:900913'
+		'init=epsg:3857'
 	END  
   
 	EXTENT -180 -90 180 90  
@@ -14,8 +14,43 @@ OUTPUTFORMAT
   NAME "png"
   DRIVER AGG/PNG
   MIMETYPE "image/png"
-  IMAGEMODE RGB
+  IMAGEMODE RGBA
   EXTENSION "png"
+END
+
+OUTPUTFORMAT
+  NAME "gif"
+  DRIVER GD/GIF
+  MIMETYPE "image/gif"
+  IMAGEMODE PC256
+  EXTENSION "gif"
+END
+
+OUTPUTFORMAT
+  NAME "jpeg"
+  DRIVER AGG/JPEG
+  MIMETYPE "image/jpeg"
+  IMAGEMODE RGB
+  EXTENSION "jpg"
+END
+
+OUTPUTFORMAT
+  NAME kml
+  DRIVER "KML"
+  MIMETYPE "application/vnd.google-earth.kml"
+  IMAGEMODE RGB
+  EXTENSION "kml"
+  FORMATOPTION 'ATTACHMENT=gmap75.kml'  #name of kml file returned
+  FORMATOPTION "maxfeaturestodraw=100"
+END
+
+OUTPUTFORMAT
+  NAME kmz
+  DRIVER "KMZ"
+  MIMETYPE "application/vnd.google-earth.kmz"
+  IMAGEMODE RGB
+  EXTENSION "kmz"
+  FORMATOPTION 'ATTACHMENT=gmap75.kmz'  #name of kmz file returned
 END
  
 	WEB
@@ -32,8 +67,10 @@ END
 	LAYER
 		NAME 	'topo-hazard'
 		TYPE    RASTER
-		DATA    "PG:host=localhost port=5432 dbname='alptruth-geo' user='postgres' password='XXXXXXX' schema='public' table='topohazard' mode='2'"
-		PROCESSING "OVERSAMPLE_RATIO=1.0"
+		DATA	"../htdocs/alptruth-geo/mapdata/topo-hazard.tif"
+		#CONNECTIONTYPE POSTGIS
+		#CONNECTION "host=localhost port=5432 dbname='alptruth-geo' user='hornert' password='XDr41z1nXD'
+		#DATA    "PG:host=localhost port=5432 dbname='alptruth-geo' user='postgres' password='Canadian_s@lsa1' schema='public' table='topohazard' mode='2'"
 		
 		PROJECTION
 			"init=epsg:3857"
@@ -61,7 +98,7 @@ END
 			NAME "High Risk"
 			EXPRESSION ([pixel] >= 2) 
 			STYLE			
-				COLOR 255 122 0
+				COLOR 255 100 0
 				OPACITY 50
 			END
 		END
@@ -69,6 +106,56 @@ END
 		CLASS
 			NAME "Some Risk"
 			EXPRESSION ([pixel] >= 1.5) 
+			STYLE
+				COLOR 255 200 0
+				OPACITY 40
+			END
+		END
+
+	END
+	
+	LAYER
+		NAME 	'snow-stability'
+		TYPE    RASTER
+		DATA	"../htdocs/alptruth-geo/mapdata/snow-stability.tif"
+		#CONNECTIONTYPE POSTGIS
+		#CONNECTION "host=localhost port=5432 dbname='alptruth-geo' user='hornert' password='XDr41z1nXD'
+		#DATA    "PG:host=localhost port=5432 dbname='alptruth-geo' user='postgres' password='Canadian_s@lsa1' schema='public' table='topohazard' mode='2'"
+		
+		PROJECTION
+			"init=epsg:3857"
+		END
+		
+		CLASS
+			NAME "Low Risk"
+			EXPRESSION ([pixel] < 1)
+			STYLE
+				COLOR 0 0 0
+				OPACITY 0
+			END
+		END
+		
+		CLASS
+			NAME "Extreme Risk"
+			EXPRESSION ([pixel] >= 3) 
+			STYLE
+				COLOR 255 0 0
+				OPACITY 50
+			END
+		END
+		
+		CLASS
+			NAME "High Risk"
+			EXPRESSION ([pixel] >= 2) 
+			STYLE			
+				COLOR 255 122 0
+				OPACITY 50
+			END
+		END
+		
+		CLASS
+			NAME "Some Risk"
+			EXPRESSION ([pixel] >= 1) 
 			STYLE
 				COLOR 255 255 0
 				OPACITY 30
@@ -79,19 +166,34 @@ END
 	
 	LAYER
 		NAME 	'alptruth'
-		STATUS OFF
 		TYPE    RASTER
-		DATA    "PG:host=localhost port=5432 dbname='alptruth-geo' user='postgres' password='Canadian_s@lsa1' schema='public' table='alptruth' mode='2'"
-		PROCESSING "NODATA=0"
-		PROCESSING "SCALE=AUTO"
+		DATA	"../htdocs/alptruth-geo/mapdata/alptruth-realfinal.tif"
+		#PROCESSING "LOAD_FULL_RES_IMAGE=YES"
+		#PROCESSING "LOAD_WHOLE_IMAGE=YES"
+		#PROCESSING "OVERSAMPLE_RATIO=5"
+		#PROCESSING "RESAMPLE=AVERAGE"
+		#PROCESSING "SCALE=AUTO"
+		OPACITY 65
+		PROJECTION
+			"init=epsg:3857"
+		END
+		
+
+	END
+	
+	LAYER
+		NAME 	'alptruth-a'
+		STATUS ON
+		TYPE    RASTER
+		DATA	"../htdocs/alptruth-geo/mapdata/alptruth-a.tif"
 		
 		PROJECTION
-			"init=epsg:4326"
+			"init=epsg:3857"
 		END
 		
 		CLASS
-			NAME "Some Risk"
-			EXPRESSION ([pixel] < 3)
+			NAME "No Flag"
+			EXPRESSION ([pixel] < 1)
 			STYLE
 				COLOR 0 0 0
 				OPACITY 0
@@ -99,24 +201,318 @@ END
 		END
 		
 		CLASS
-			NAME "Moderate Risk"
-			EXPRESSION ([pixel] >= 3 AND [pixel] < 5) 
-			STYLE
-				COLOR 255 255 0
-				OPACITY 30
-			END
-		END
-
-		CLASS
-			NAME "Extreme Risk"
-			EXPRESSION ([pixel] >= 5) 
+			NAME "Flag"
+			EXPRESSION ([pixel] >= 1)
 			STYLE
 				COLOR 255 0 0
-				OPACITY 50
+				OPACITY 33
 			END
 		END
 
 	END
+	
+	LAYER
+		NAME 	'alptruth-l'
+		STATUS ON
+		TYPE    RASTER
+		DATA	"../htdocs/alptruth-geo/mapdata/alptruth-l.tif"
+		
+		PROJECTION
+			"init=epsg:3857"
+		END
+		
+		CLASS
+			NAME "No Flag"
+			EXPRESSION ([pixel] < 1)
+			STYLE
+				COLOR 0 0 0
+				OPACITY 0
+			END
+		END
+		
+		CLASS
+			NAME "Flag"
+			EXPRESSION ([pixel] >= 1)
+			STYLE
+				COLOR 255 0 0
+				OPACITY 33
+			END
+		END
+
+	END
+
+	LAYER
+		NAME 	'alptruth-p'
+		STATUS ON
+		TYPE    RASTER
+		DATA	"../htdocs/alptruth-geo/mapdata/alptruth-p.tif"
+		
+		PROJECTION
+			"init=epsg:3857"
+		END
+		
+		CLASS
+			NAME "No Flag"
+			EXPRESSION ([pixel] < 1)
+			STYLE
+				COLOR 0 0 0
+				OPACITY 0
+			END
+		END
+		
+		CLASS
+			NAME "Flag"
+			EXPRESSION ([pixel] >= 1)
+			STYLE
+				COLOR 255 0 0
+				OPACITY 33
+			END
+		END
+
+	END
+
+		LAYER
+		NAME 	'alptruth-t'
+		STATUS ON
+		TYPE    RASTER
+		DATA	"../htdocs/alptruth-geo/mapdata/alptruth-t.tif"
+		
+		PROJECTION
+			"init=epsg:3857"
+		END
+		
+		CLASS
+			NAME "No Flag"
+			EXPRESSION ([pixel] < 1)
+			STYLE
+				COLOR 0 0 0
+				OPACITY 0
+			END
+		END
+		
+		CLASS
+			NAME "Flag"
+			EXPRESSION ([pixel] >= 1)
+			STYLE
+				COLOR 255 0 0
+				OPACITY 33
+			END
+		END
+	END
+	
+	LAYER
+		NAME 	'alptruth-r'
+		STATUS ON
+		TYPE    RASTER
+		DATA	"../htdocs/alptruth-geo/mapdata/alptruth-r.tif"
+		
+		PROJECTION
+			"init=epsg:3857"
+		END
+		
+		CLASS
+			NAME "No Flag"
+			EXPRESSION ([pixel] < 1)
+			STYLE
+				COLOR 0 0 0
+				OPACITY 0
+			END
+		END
+		
+		CLASS
+			NAME "Flag"
+			EXPRESSION ([pixel] >= 1)
+			STYLE
+				COLOR 255 0 0
+				OPACITY 33
+			END
+		END
+
+	END
+
+	LAYER
+		NAME 	'alptruth-u'
+		STATUS ON
+		TYPE    RASTER
+		DATA	"../htdocs/alptruth-geo/mapdata/alptruth-u.tif"
+		
+		PROJECTION
+			"init=epsg:3857"
+		END
+		
+		CLASS
+			NAME "No Flag"
+			EXPRESSION ([pixel] < 1)
+			STYLE
+				COLOR 0 0 0
+				OPACITY 0
+			END
+		END
+		
+		CLASS
+			NAME "Flag"
+			EXPRESSION ([pixel] >= 1)
+			STYLE
+				COLOR 255 0 0
+				OPACITY 33
+			END
+		END
+
+	END
+	
+	LAYER
+		NAME 	'alptruth-th'
+		STATUS ON
+		TYPE    RASTER
+		DATA	"../htdocs/alptruth-geo/mapdata/alptruth-th.tif"
+
+		PROJECTION
+			"init=epsg:3857"
+		END
+		
+		CLASS
+			NAME "No Flag"
+			EXPRESSION ([pixel] < 1)
+			STYLE
+				COLOR 0 0 0
+				OPACITY 0
+			END
+		END
+		
+		CLASS
+			NAME "Flag"
+			EXPRESSION ([pixel] >= 1)
+			STYLE
+				COLOR 255 0 0
+				OPACITY 33
+			END
+		END
+
+	END
+	
+	LAYER
+		NAME	'snow-depth'
+		TYPE	RASTER
+		DATA	"../htdocs/alptruth-geo/mapdata/snow_depth.map"
+		PROJECTION
+			"init=epsg:4326"
+		END
+		
+		
+		CLASS
+			NAME "No Snow"
+			EXPRESSION ([pixel] == 0)
+			STYLE
+				COLOR 0 0 0
+				OPACITY 0
+			END
+		END
+		
+		CLASS
+			NAME "Snow"
+			EXPRESSION ([pixel] > 1)
+			STYLE
+				COLORRANGE 0 0 50 130 90 255
+				DATARANGE 0.0 2000.0
+				RANGEITEM "foobar"
+				OPACITY 65
+			END
+		END
+	END
+	
+	LAYER
+		NAME	'elevation'
+		TYPE	RASTER
+		DATA	"../htdocs/alptruth-geo/mapdata/CO_DEM/codem10_new1/hdr.adf"
+		PROJECTION
+			"init=epsg:26913"
+		END
+		CLASSITEM "[pixel]"
+		
+		CLASS
+			NAME "Low"
+			EXPRESSION ([pixel] < 2000)
+			STYLE
+				COLORRANGE 0 0 0 100 155 100
+				DATARANGE 0.0 2000.0
+				RANGEITEM "[pixel]"
+				OPACITY 20
+			END
+		END
+		CLASS
+			NAME "Medium"
+			EXPRESSION ([pixel] < 3000)
+			STYLE
+				COLORRANGE 100 155 100 255 205 50
+				DATARANGE 2000.0 3000.0
+				RANGEITEM "foobar"
+				OPACITY 50
+			END
+		END
+		CLASS
+			NAME "High"
+			EXPRESSION ([pixel] < 5000)
+			STYLE
+				COLORRANGE 255 205 50 255 20 20
+				DATARANGE 3000.0 5000.0
+				RANGEITEM "foobar"
+				OPACITY 50
+			END
+		END
+	END
+	
+	LAYER
+		NAME	'slope'
+		TYPE	RASTER
+		DATA	"../htdocs/alptruth-geo/mapdata/slope.tif"
+		PROJECTION
+			"init=epsg:3857"
+		END
+		CLASSITEM "[pixel]"
+		
+		CLASS
+			NAME "None"
+			EXPRESSION ([pixel] < 20)
+			STYLE
+				COLORRANGE 255 255 100 255 255 100
+				DATARANGE 0 20
+				RANGEITEM "[pixel]"
+				OPACITY 0
+			END
+		END
+		
+		CLASS
+			NAME "Low"
+			EXPRESSION ([pixel] < 25)
+			STYLE
+				COLORRANGE 255 255 100 255 230 100
+				DATARANGE 20 25
+				RANGEITEM "[pixel]"
+				OPACITY 45
+			END
+		END
+		CLASS
+			NAME "Medium"
+			EXPRESSION ([pixel] < 35)
+			STYLE
+				COLORRANGE 255 230 100 245 130 90
+				DATARANGE 25 35
+				RANGEITEM "[pixel]"
+				OPACITY 65
+			END
+		END
+		CLASS
+			NAME "High"
+			EXPRESSION ([pixel] < 90)
+			STYLE
+				COLORRANGE 245 130 90 255 30 255
+				DATARANGE 35 75
+				RANGEITEM "[pixel]"
+				OPACITY 65
+			END
+		END
+	END
+	
 END
 
 
